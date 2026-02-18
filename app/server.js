@@ -34,7 +34,7 @@ app.use(bodyParse.urlencoded({ extended: false }));
 app.use(bodyParse.json());
 
 // Database connection (skip during tests)
-const db = process.env.MONGO_URI
+const db = process.env.MONGO_URI;
 // console.log('Connecting to MongoDB at', db);
 if (process.env.NODE_ENV !== 'test') {
     mongoose
