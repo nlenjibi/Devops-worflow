@@ -2,6 +2,7 @@
 const dotenv = require('dotenv');
 dotenv.config({ path: "./.env" });
 
+const path = require('path');
 const mongoose = require('mongoose');
 const bodyParse = require('body-parser');
 const express = require('express');
@@ -14,7 +15,8 @@ const FrontRouter = require('./routes/front');
 // API routes (JSON)
 const ApiRouter = require('./routes/api');
 
-// Set ejs template engine
+// Set views directory and ejs template engine
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 const requestIdMiddleware = require('./middleware/tracing');
