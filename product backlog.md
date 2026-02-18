@@ -14,4 +14,3 @@ The Minimum Viable Product focuses on core task management functionality with ro
 - [ ] Deployed to Vercel successfully
 - [ ] MongoDB connection secured via environment variables
 - [ ] Health endpoint responding correctly
-- [ ] OpenTelemetry tracing functional
