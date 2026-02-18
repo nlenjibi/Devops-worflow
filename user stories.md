@@ -1,164 +1,224 @@
-
 ## User Stories
 
-### Story 1: Basic Todo Creation 
-**As a** user  
-**I want** to create new todo tasks  
-**So that** I can track my work and responsibilities
+This file contains prioritized user stories with estimates, acceptance criteria, an assigned sprint, and a short Definition of Done (DoD) for each story to support sprint planning and grading evidence.
 
-**Acceptance Criteria:**
-- User can submit a task via web form
-- Task is validated (non-empty)
+### Story 1: Basic Todo Creation
+
+As a user
+I want to create new todo tasks
+So that I can track my work and responsibilities
+
+Acceptance Criteria:
+
+- User can submit a task via web form or JSON API
+- Task is validated (non-empty title)
 - Task is saved to MongoDB
-- User is redirected to updated todo list
-- API endpoint `POST /api/todos` accepts JSON requests
+- User is redirected to the updated todo list after create
+- API: `POST /api/todos` accepts JSON
 
-**Priority:** High  
-**Story Points:** 3  
-**Reasoning:** Core functionality, straightforward implementation with validation
+Priority: High
+Story Points: 3
+Sprint: Sprint 1
+Definition of Done:
+
+- Unit/integration tests for creation exist and pass
+- Linting passes and CI green
+- DB persistence verified locally and via tests
+- Documentation updated (README & examples)
 
 ---
 
-### Story 2: Todo List Display 
-**As a** user  
-**I want** to view all my todos in one place  
-**So that** I can see what tasks need to be completed
+### Story 2: Todo List Display
 
-**Acceptance Criteria:**
+As a user
+I want to view all my todos in one place
+So that I can see what tasks need to be completed
+
+Acceptance Criteria:
+
 - Homepage displays all todos from database
 - Empty state handled gracefully
-- API endpoint `GET /api/todos` returns JSON array
+- API: `GET /api/todos` returns JSON array
 - Support filtering by completion status, priority, and category
 
-**Priority:** High  
-**Story Points:** 2  
-**Reasoning:** Essential read functionality, minimal complexity
+Priority: High
+Story Points: 2
+Sprint: Sprint 1
+Definition of Done:
+
+- Tests cover list rendering and API response
+- Filter query params are documented and tested
+- UI empty-state handled and tested
 
 ---
 
-### Story 3: Todo Deletion 
-**As a** user  
-**I want** to delete completed or unwanted todos  
-**So that** I can keep my task list clean and relevant
+### Story 3: Todo Deletion
 
-**Acceptance Criteria:**
-- Delete button available for each todo
-- Confirmation prevents accidental deletion
+As a user
+I want to delete completed or unwanted todos
+So that I can keep my task list clean and relevant
+
+Acceptance Criteria:
+
+- Delete control available for each todo (frontend uses a form POST)
+- Frontend delete action posts to `/todo/destroy` with `_key` (no client-side confirmation implemented)
 - Todo removed from database permanently
-- API endpoint `DELETE /api/todos/:id` removes specific todo
+- API: `DELETE /api/todos/:id` removes the todo
 
-**Priority:** High  
-**Story Points:** 2  
-**Reasoning:** Basic CRUD operation, simple implementation
+Priority: High
+Story Points: 2
+Sprint: Sprint 1
+Definition of Done:
 
----
-
-### Story 4: Todo Status Management 
-**As a** user  
-**I want** to mark todos as complete or incomplete  
-**So that** I can track my progress on tasks
-
-**Acceptance Criteria:**
-- Toggle completion status via web interface
-- Visual indication of completed vs pending todos
-- API endpoint `PATCH /api/todos/:id` updates completion status
-- Completed todos remain visible but distinguished
-
-**Priority:** High  
-**Story Points:** 3  
-**Reasoning:** Core functionality requiring UI and API updates
+- Tests for deletion both in API and UI
+- Confirmation dialog present and tested
+- CI green with deletion tests
 
 ---
 
-### Story 5: Advanced Todo Properties 
-**As a** user  
-**I want** to set priority, due date, and category for todos  
-**So that** I can better organize and prioritize my tasks
+### Story 4: Todo Status Management
 
-**Acceptance Criteria:**
+As a user
+I want to mark todos as complete or incomplete
+So that I can track my progress on tasks
+
+Acceptance Criteria:
+
+- API: `PATCH /api/todos/:id` updates completion status (supported)
+- Visual distinction for completed vs pending todos (UI displays tasks; no toggle currently)
+- Note: web UI currently does not provide a toggle control — updates to `completed` are available via the API or future UI work
+
+Priority: High
+Story Points: 3
+Sprint: Sprint 1
+Definition of Done:
+
+- Tests for toggle behavior and API update
+- Visual styling for completed tasks
+- CI green with toggle tests
+
+---
+
+### Story 5: Advanced Todo Properties
+
+As a user
+I want to set priority, due date, and category for todos
+So that I can better organize and prioritize my tasks
+
+Acceptance Criteria:
+
 - Priority levels: low, medium, high (default: medium)
 - Optional due date field
 - Optional category field for grouping
-- API supports all fields in create/update operations
-- Filtering available by priority and category
+- API supports these fields on creation (`POST /api/todos`) and they are persisted
+- Note: the current `PATCH /api/todos/:id` implementation updates `task` and `completed` only; updating `priority`, `dueDate`, and `category` via PATCH is a planned enhancement
 
-**Priority:** Medium  
-**Story Points:** 5  
-**Reasoning:** Enhanced functionality requiring schema updates and UI changes
+Priority: Medium
+Story Points: 5
+Sprint: Sprint 2
+Definition of Done:
+
+- Schema updated and migration considered
+- Tests for create/update with new fields
+- UI supports input and filtering for the new fields
+- Documentation updated
 
 ---
 
-### Story 6: Application Health Monitoring 
-**As a** system administrator  
-**I want** to monitor application health and performance  
-**So that** I can ensure system reliability and troubleshoot issues
+### Story 6: Application Health Monitoring
 
-**Acceptance Criteria:**
-- Health endpoint `/health` returns system status
+As a system administrator
+I want to monitor application health and performance
+So that I can ensure system reliability and troubleshoot issues
+
+Acceptance Criteria:
+
+- Health endpoint `/health` returns system status and uptime
 - OpenTelemetry tracing captures request flows
 - Winston logging records application events
 - Request ID tracking for distributed tracing
 - Uptime reporting in health checks
 
-**Priority:** High  
-**Story Points:** 8  
-**Reasoning:** Complex observability setup, critical for production deployment
+Priority: High
+Story Points: 8
+Sprint: Sprint 2
+Definition of Done:
+
+- `/health` implemented and covered by integration tests
+- Tracing configured and validated via test or example traces
+- Logs include request-level context and are structured
+- CI includes lint and tests for observability code
 
 ---
 
-
-
 ### Story 7: Todo Search and Filtering
-**As a** user  
-**I want** to search and filter my todos  
-**So that** I can quickly find specific tasks
 
-**Acceptance Criteria:**
-- Text search across task descriptions
-- Filter by completion status, priority, category
-- Filter by date ranges (created, due date)
-- Search results update in real-time
-- API supports query parameters for filtering
+As a user
+I want to search and filter my todos
+So that I can quickly find specific tasks
 
-**Priority:** Medium  
-**Story Points:** 5  
-**Reasoning:** User experience enhancement, requires search implementation
+Acceptance Criteria:
+
+- Filter by completion status, priority, category via query params (implemented in the API)
+- Text search across task descriptions (not currently implemented; backlog)
+- Filter by date ranges (created, due date) (not currently implemented)
+- UI real-time search is a future enhancement
+
+Priority: Medium
+Story Points: 5
+Sprint: Sprint 2
+Definition of Done:
+
+- Search API implemented and tested
+- UI filtering controls implemented and tested
+- Performance considered for simple datasets
 
 ---
 
 ### Story 8: Todo Bulk Operations
-**As a** user  
-**I want** to perform bulk actions on multiple todos  
-**So that** I can efficiently manage large task lists
 
-**Acceptance Criteria:**
+As a user
+I want to perform bulk actions on multiple todos
+So that I can efficiently manage large task lists
+
+Acceptance Criteria:
+
 - Select multiple todos via checkboxes
 - Bulk delete selected todos
 - Bulk mark as complete/incomplete
 - Bulk category or priority updates
 - Confirmation dialog for bulk operations
 
-**Priority:** Low  
-**Story Points:** 8  
-**Reasoning:** Advanced feature, complex UI and API changes required
+Priority: Low
+Story Points: 8
+Sprint: Backlog (post-Sprint 2)
+Definition of Done:
+
+- UI supports multi-select and bulk actions
+- API endpoints support bulk updates/deletes
+- Tests for bulk flows and confirmation
 
 ---
 
 ### Story 9: User Authentication & Authorization
-**As a** user  
-**I want** secure access to my personal todos  
-**So that** my tasks remain private and secure
 
-**Acceptance Criteria:**
+As a user
+I want secure access to my personal todos
+So that my tasks remain private and secure
+
+Acceptance Criteria:
+
 - User registration and login functionality
 - JWT token-based authentication
 - Password hashing and security
 - User-specific todo isolation
 - Protected API endpoints require authentication
 
-**Priority:** Medium  
-**Story Points:** 13  
-**Reasoning:** Significant feature requiring security implementation and data model changes
+Priority: Medium
+Story Points: 13
+Sprint: Backlog (security first before production)
+Definition of Done:
 
----
-
+- Auth flows implemented with secure storage and hashed passwords
+- Tests for auth and protected routes
+- Documentation for env vars and token usage
