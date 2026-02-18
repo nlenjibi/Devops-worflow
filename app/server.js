@@ -1,4 +1,6 @@
 // Initialize tracing as early as possible
+const dotenv = require('dotenv');
+dotenv.config({ path: "./.env" });
 require('./tracing/opentelemetry');
 
 const mongoose = require('mongoose');
@@ -29,14 +31,18 @@ morgan.token('id', function getId(req) { return req.id; });
 app.use(morgan(':id :remote-addr - :method :url :status :res[content-length] - :response-time ms', { stream: { write: (msg) => logger.info(msg.trim()) } }));
 
 app.use(bodyParse.urlencoded({ extended: false }));
+app.use(bodyParse.json());
 
 // Database connection (skip during tests)
-const db = require('./config/keys').mongoProdURI;
+const db = process.env.MONGO_URI
+// console.log('Connecting to MongoDB at', db);
 if (process.env.NODE_ENV !== 'test') {
     mongoose
         .connect(db, { useNewUrlParser: true })
-        .then(() => console.log(`Mongodb Connected`))
-        .catch(error => console.log(error));
+        .then((response) => {
+            console.log(response.connection.host, response.connection.port, response.connection.db.databaseName);
+            logger.info(`Mongodb Connected`);})
+        .catch(error => logger.error(error));
 }
 
 

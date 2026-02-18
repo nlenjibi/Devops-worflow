@@ -12,22 +12,7 @@ jobs:
     strategy:
       matrix:
         node-version: [18.x]
-
-    services:
-      mongodb:
-        image: mongo:6.0
-        env:
-          MONGO_INITDB_ROOT_USERNAME: root
-          MONGO_INITDB_ROOT_PASSWORD: root
-          MONGO_INITDB_DATABASE: todoapp
-        ports:
-          - 27017:27017
-        options: >-
-          --health-cmd "mongosh --eval 'db.adminCommand({ping:1})'" --health-interval 10s --health-timeout 5s --health-retries 5
-
-    env:
-      MONGO_URI: mongodb://root:root@localhost:27017/todoapp?authSource=admin
-
+        
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
