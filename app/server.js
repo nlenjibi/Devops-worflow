@@ -1,7 +1,6 @@
 // Initialize tracing as early as possible
 const dotenv = require('dotenv');
 dotenv.config({ path: "./.env" });
-require('./tracing/opentelemetry');
 
 const mongoose = require('mongoose');
 const bodyParse = require('body-parser');
